@@ -23,6 +23,12 @@ class CheckListViewModel: ObservableObject {
         items.append(item)
     }
     
+    public func updateItem(item: CheckItem) {
+        if let index = items.firstIndex(where: {$0.id == item.id}) {
+            items[index] = item
+        }
+    }
+    
     public func remove(atOffsets indexSet: IndexSet) {
         items.remove(atOffsets: indexSet)
     }

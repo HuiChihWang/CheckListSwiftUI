@@ -8,38 +8,58 @@
 import SwiftUI
 
 struct CheckItemDetailView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Binding var item: CheckItem
     
-    @State var itemName = ""
-    @State var isChecked = false
-    
+    var body: some View {
+        Form {
+            TextField("Enter Item Name", text: $item.name)
+            Toggle("Completed", isOn: $item.isChecked)
+        }
+    }
+}
+
+struct AddItemView: View {
     let checklistModel: CheckListViewModel
     
-    
+    @State private var newItem = CheckItem(name: "")
+    @Environment(\.presentationMode) private var presentationMode
     
     var body: some View {
         NavigationView {
-            Form {
-                TextField("Enter Item Name", text: $itemName)
-                Toggle("Completed", isOn: $isChecked)
-                
-            }
-            .navigationBarTitle("Create New Item", displayMode: .inline)
-            .navigationBarItems(trailing: Button("Done") {
-                // new item
-                let newItem = CheckItem(name: itemName, isChecked: isChecked)
-                checklistModel.addNewItem(item: newItem)
-                self.presentationMode.wrappedValue.dismiss()
-            }
-            .disabled(itemName.isEmpty)
+            CheckItemDetailView(item: $newItem)
+                .navigationBarTitle("Add Item", displayMode: .inline)
+                .navigationBarItems(
+                    trailing: Button("Done") {
+                        self.checklistModel.addNewItem(item: newItem)
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                    .disabled(newItem.name.isEmpty)
             )
         }
+    }
+}
+
+struct EditItemView: View {
+    let checklistModel: CheckListViewModel
+    @Environment(\.presentationMode) private var presentationMode
+    @State var editItem: CheckItem
+    
+    var body: some View {
+        CheckItemDetailView(item: $editItem)
+            .navigationBarTitle("Edit Item", displayMode: .inline)
+            .navigationBarItems(
+                trailing: Button("Done") {
+                    self.checklistModel.updateItem(item: editItem)
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            )
+            .disabled(editItem.name.isEmpty)
     }
 }
 
 
 struct EditCheckItemView_Previews: PreviewProvider {
     static var previews: some View {
-        CheckItemDetailView(checklistModel: CheckListViewModel())
+        CheckItemDetailView(item: .constant(CheckItem()))
     }
 }

@@ -8,17 +8,28 @@
 import SwiftUI
 
 struct CheckListView: View {
-    @ObservedObject var checklistModel = CheckListViewModel()
-    @State var isShowAddView = false
+    @ObservedObject private var checklistModel = CheckListViewModel()
+    @State private var isShowAddView = false
+    @State private var isShowEditView = false
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(checklistModel.items) { item in
-                    CheckItemView(item: item)
-                        .onTapGesture {
-                            checklistModel.checkItem(item: item)
+                    NavigationLink(
+                        destination: EditItemView(checklistModel: checklistModel, editItem: item),
+                        label: {
+                            CheckItemView(
+                                item: item,
+                                checkAction: {
+                                    checklistModel.checkItem(item: item)
+                                },
+                                action: {
+                                    self.isShowEditView = true
+                                }
+                            )
                         }
+                    )
                 }
                 .onDelete(perform: checklistModel.remove)
                 .onMove(perform: checklistModel.move)
@@ -32,8 +43,7 @@ struct CheckListView: View {
                 }
             )
             .sheet(isPresented: $isShowAddView, content: {
-                CheckItemDetailView(checklistModel: checklistModel)
-                    .background(Color(UIColor.systemBackground))
+                AddItemView(checklistModel: checklistModel)
             })
         }
     }
@@ -48,17 +58,22 @@ struct CheckListView_Previews: PreviewProvider {
 
 struct CheckItemView: View {
     let item: CheckItem
+    let checkAction: () -> Void
+    let action: () -> Void
     
     var body: some View {
         HStack {
-            Text(item.name)
-            Spacer()
+            Group {
+                Text(item.name)
+                Spacer()
+            }
+            .onTapGesture(perform: action)
             
             Image(systemName: item.isChecked ? "checkmark.circle" : "circle")
+                .foregroundColor(.gray)
                 .font(.system(size: 20))
                 .padding(.trailing, 5)
-            
+                .onTapGesture(perform: checkAction)
         }
-        .contentShape(Rectangle())
     }
 }
