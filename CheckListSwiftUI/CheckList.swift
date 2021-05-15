@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct CheckItem: Identifiable {
+struct CheckItem: Identifiable, Codable {
     var name: String = "Item"
     var isChecked: Bool = false
     

@@ -13,7 +13,13 @@ func generateItems(itemNum: Int) -> [CheckItem] {
 
 
 class CheckListViewModel: ObservableObject {
-    @Published private(set) var items = generateItems(itemNum: 15)
+    @Published private(set) var items = [CheckItem]()
+    
+    init() {
+        loadItems()
+    }
+    
+    private let savePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("checklist.plist")
     
     public func addNewItem(item: CheckItem) {
         guard !items.contains(where: { $0.id == item.id }) else {
@@ -43,4 +49,29 @@ class CheckListViewModel: ObservableObject {
         }
     }
     
+    public func saveItems() {
+ 
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(items)
+            try data.write(to: savePath, options: .atomic)
+            print("Save data to \(savePath)")
+        } catch {
+            print("Save Data Fail: \(error.localizedDescription)")
+        }
+    }
+    
+    private func loadItems() {
+        let decoder = PropertyListDecoder()
+        
+        do {
+            let data = try Data(contentsOf: savePath)
+            items = try decoder.decode([CheckItem].self, from: data)
+            print("Load data from \(savePath)")
+
+        } catch {
+            print("Load Data Error: \(error.localizedDescription)")
+        }
+    }
 }

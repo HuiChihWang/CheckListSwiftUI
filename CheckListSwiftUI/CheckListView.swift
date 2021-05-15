@@ -42,10 +42,23 @@ struct CheckListView: View {
                     self.isShowAddView = true
                 }
             )
-            .sheet(isPresented: $isShowAddView, content: {
-                AddItemView(checklistModel: checklistModel)
-            })
+            .sheet(
+                isPresented: $isShowAddView,
+                content: {
+                    AddItemView(checklistModel: checklistModel)
+                        .onAppear {
+                            print("NewChecklistItemView has appeared!")
+                        }
+                        .onDisappear {
+                            print("NewChecklistItemView has disappeared!")
+                        }
+                }
+            )
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) {_ in
+            self.checklistModel.saveItems()
+        }
+
     }
 }
 
