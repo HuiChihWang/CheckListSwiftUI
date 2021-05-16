@@ -8,58 +8,76 @@
 import SwiftUI
 
 struct CheckItemDetailView: View {
-    @Binding var item: CheckItem
+    @Binding var name: String
+    @Binding var isChecked: Bool
     
     var body: some View {
         Form {
-            TextField("Enter Item Name", text: $item.name)
-            Toggle("Completed", isOn: $item.isChecked)
-        }
-    }
-}
-
-struct AddItemView: View {
-    let checklistModel: CheckListViewModel
-    
-    @State private var newItem = CheckItem(name: "")
-    @Environment(\.presentationMode) private var presentationMode
-    
-    var body: some View {
-        NavigationView {
-            CheckItemDetailView(item: $newItem)
-                .navigationBarTitle("Add Item", displayMode: .inline)
-                .navigationBarItems(
-                    trailing: Button("Done") {
-                        self.checklistModel.addNewItem(item: newItem)
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-                    .disabled(newItem.name.isEmpty)
-            )
+            TextField("Enter Item Name", text: $name)
+            Toggle("Completed", isOn: $isChecked)
         }
     }
 }
 
 struct EditItemView: View {
-    let checklistModel: CheckListViewModel
+    @Environment(\.managedObjectContext) private var context
     @Environment(\.presentationMode) private var presentationMode
-    @State var editItem: CheckItem
+    
+    let editItem: CheckItemCore?
+    
+    var isEditMode: Bool {
+        editItem != nil
+    }
+    
+    var navigationTitle: String {
+        isEditMode ? "Edit Item" : "New Item"
+    }
+    
+    
+    
+    @State var name: String
+    @State var isChecked: Bool
+
+    init(editItem: CheckItemCore? = nil) {
+        self.editItem = editItem
+
+        _name = .init(initialValue: editItem?.name ?? "")
+        _isChecked = .init(initialValue: editItem?.isChecked ?? false)
+    }
     
     var body: some View {
-        CheckItemDetailView(item: $editItem)
-            .navigationBarTitle("Edit Item", displayMode: .inline)
-            .navigationBarItems(
-                trailing: Button("Done") {
-                    self.checklistModel.updateItem(item: editItem)
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-            )
-            .disabled(editItem.name.isEmpty)
+        CheckItemDetailView(name: $name, isChecked: $isChecked)
+        .navigationBarItems(
+            trailing: Button("Done") {
+                let finishedItem = editItem ?? CheckItemCore(context: context)
+                
+                finishedItem.name = name
+                finishedItem.isChecked = isChecked
+                
+                self.presentationMode.wrappedValue.dismiss()
+            }
+            .disabled(name.isEmpty)
+        )
+        .navigationBarTitle(navigationTitle, displayMode: .inline)
     }
 }
 
 
 struct EditCheckItemView_Previews: PreviewProvider {
+    static let container = PersistenceController.previewItems.container
+    
+    static let item: CheckItemCore = {
+        let item = CheckItemCore(context: container.viewContext)
+        item.name = "Sex"
+        item.isChecked = [true, false].randomElement()!
+        return item
+    }()
+    
     static var previews: some View {
-        CheckItemDetailView(item: .constant(CheckItem()))
+        NavigationView {
+            EditItemView()
+        }
+        .environment(\.managedObjectContext, container.viewContext)
+        
     }
 }
