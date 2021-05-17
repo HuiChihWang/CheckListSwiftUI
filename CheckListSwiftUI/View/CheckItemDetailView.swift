@@ -23,7 +23,7 @@ struct EditItemView: View {
     @Environment(\.managedObjectContext) private var context
     @Environment(\.presentationMode) private var presentationMode
     
-    let editItem: CheckItemCore?
+    let editItem: CheckItem?
     
     var isEditMode: Bool {
         editItem != nil
@@ -38,7 +38,7 @@ struct EditItemView: View {
     @State var name: String
     @State var isChecked: Bool
 
-    init(editItem: CheckItemCore? = nil) {
+    init(editItem: CheckItem? = nil) {
         self.editItem = editItem
 
         _name = .init(initialValue: editItem?.name ?? "")
@@ -49,7 +49,7 @@ struct EditItemView: View {
         CheckItemDetailView(name: $name, isChecked: $isChecked)
         .navigationBarItems(
             trailing: Button("Done") {
-                let finishedItem = editItem ?? CheckItemCore(context: context)
+                let finishedItem = editItem ?? CheckItem(context: context)
                 
                 finishedItem.name = name
                 finishedItem.isChecked = isChecked
@@ -66,8 +66,8 @@ struct EditItemView: View {
 struct EditCheckItemView_Previews: PreviewProvider {
     static let container = PersistenceController.previewItems.container
     
-    static let item: CheckItemCore = {
-        let item = CheckItemCore(context: container.viewContext)
+    static let item: CheckItem = {
+        let item = CheckItem(context: container.viewContext)
         item.name = "Sex"
         item.isChecked = [true, false].randomElement()!
         return item

@@ -13,7 +13,7 @@ struct PersistenceController {
     static var previewItems: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        CheckItemCore.gemerateRandomItems(contex: viewContext, numberOfItems: 5)
+        CheckItem.gemerateRandomItems(contex: viewContext, numberOfItems: 5)
         return result
     }()
     

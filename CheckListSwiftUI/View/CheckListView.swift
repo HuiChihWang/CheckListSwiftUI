@@ -10,8 +10,8 @@ import SwiftUI
 struct CheckListView: View {
     @Environment(\.managedObjectContext) private var managedContext
     @FetchRequest(
-        fetchRequest: CheckItemCore.requestwithSorting()
-    ) private var items: FetchedResults<CheckItemCore>
+        fetchRequest: CheckItem.requestwithSorting()
+    ) private var items: FetchedResults<CheckItem>
     
     
     @State private var isShowAddView = false

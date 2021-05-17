@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CheckItemView: View {
-    @ObservedObject var item: CheckItemCore
+    @ObservedObject var item: CheckItem
     var action: () -> Void = {}
     
     var body: some View {
@@ -34,8 +34,8 @@ struct CheckItemView: View {
 struct CheckItemView_Previews: PreviewProvider {
     static let container = PersistenceController.previewItems.container
     
-    static let item: CheckItemCore = {
-        let item = CheckItemCore(context: container.viewContext)
+    static let item: CheckItem = {
+        let item = CheckItem(context: container.viewContext)
         item.name = "Sex"
         item.isChecked = [true, false].randomElement()!
         return item

@@ -1,20 +1,20 @@
 //
-//  CheckItemCore+CoreDataClass.swift
+//  CheckItem+CoreDataClass.swift
 //  CheckListSwiftUI
 //
-//  Created by Hui Chih Wang on 2021/5/16.
+//  Created by Hui Chih Wang on 2021/5/17.
 //
 //
 
 import Foundation
 import CoreData
 
-@objc(CheckItemCore)
-public class CheckItemCore: NSManagedObject {
+@objc(CheckItem)
+public class CheckItem: NSManagedObject {
     
     public class func gemerateRandomItems(contex: NSManagedObjectContext, numberOfItems: Int) {
         (0..<numberOfItems).forEach { index in
-            let checkItem = CheckItemCore(context: contex)
+            let checkItem = CheckItem(context: contex)
             checkItem.name = "Item \(index)"
             checkItem.isChecked = [true, false].randomElement()!
             
@@ -28,19 +28,20 @@ public class CheckItemCore: NSManagedObject {
         }
     }
     
-    public class func createDefaultItem(context: NSManagedObjectContext) -> CheckItemCore {
-        let checkItem = CheckItemCore(context: context)
+    public class func createDefaultItem(context: NSManagedObjectContext) -> CheckItem {
+        let checkItem = CheckItem(context: context)
         checkItem.name = ""
         checkItem.isChecked = false
         return checkItem
     }
     
-    public class func requestwithSorting() -> NSFetchRequest<CheckItemCore> {
-        let request = CheckItemCore.fetchRequest() as NSFetchRequest<CheckItemCore>
+    public class func requestwithSorting() -> NSFetchRequest<CheckItem> {
+        let request = CheckItem.fetchRequest() as NSFetchRequest<CheckItem>
         request.sortDescriptors = [
-            NSSortDescriptor(keyPath: \CheckItemCore.name, ascending: true)
+            NSSortDescriptor(keyPath: \CheckItem.name, ascending: true)
         ]
         
         return request
     }
+
 }
