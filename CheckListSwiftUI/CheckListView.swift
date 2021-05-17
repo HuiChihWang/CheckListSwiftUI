@@ -8,25 +8,28 @@
 import SwiftUI
 
 struct CheckListView: View {
-    @EnvironmentObject private var checklistModel: CheckListViewModel
+    @Environment(\.managedObjectContext) private var managedContext
+    @FetchRequest(
+        fetchRequest: CheckItemCore.requestwithSorting()
+    ) private var items: FetchedResults<CheckItemCore>
+    
+    
     @State private var isShowAddView = false
     @State private var isShowEditView = false
     
+
     var body: some View {
         NavigationView {
             List {
-                ForEach(checklistModel.items) { item in
+                ForEach(items) { item in
                     NavigationLink(
                         destination: EditItemView(editItem: item),
                         label: {
-                            CheckItemView(item: item) {
-                                self.isShowEditView = true
-                            }
+                            CheckItemView(item: item)
                         }
                     )
                 }
-                .onDelete(perform: checklistModel.remove)
-                .onMove(perform: checklistModel.move)
+                .onDelete(perform: deleteItem)
             }
             .listStyle(GroupedListStyle())
             .navigationBarTitle("CheckList")
@@ -39,50 +42,36 @@ struct CheckListView: View {
             .sheet(
                 isPresented: $isShowAddView,
                 content: {
-                    AddItemView()
-                        .onAppear {
-                            print("NewChecklistItemView has appeared!")
-                        }
-                        .onDisappear {
-                            print("NewChecklistItemView has disappeared!")
-                        }
+                    NavigationView {
+                        EditItemView()
+                    }
                 }
             )
         }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) {_ in
-            self.checklistModel.saveItems()
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            do {
+                try self.managedContext.save()
+                print("save data to core model")
+            }
+            catch {
+                print("Save Error: \(error.localizedDescription)")
+            }
         }
 
+    }
+    
+    private func deleteItem(atOffSet indexes: IndexSet) {
+        indexes.forEach { index in
+            self.managedContext.delete(items[index])
+        }
     }
 }
 
 struct CheckListView_Previews: PreviewProvider {
     static var previews: some View {
         CheckListView()
-            .preferredColorScheme(.dark)
+            .environment(\.managedObjectContext, PersistenceController.previewItems.container.viewContext)
     }
 }
 
-struct CheckItemView: View {
-    @EnvironmentObject private var checklistModel: CheckListViewModel
-    let item: CheckItem
-    let tapAction: () -> Void
-    
-    var body: some View {
-        HStack {
-            Group {
-                Text(item.name)
-                Spacer()
-            }
-            .onTapGesture(perform: tapAction)
-            
-            Image(systemName: item.isChecked ? "checkmark.circle" : "circle")
-                .foregroundColor(.gray)
-                .font(.system(size: 20))
-                .padding(.trailing, 5)
-                .onTapGesture {
-                    checklistModel.checkItem(item: item)
-                }
-        }
-    }
-}
+

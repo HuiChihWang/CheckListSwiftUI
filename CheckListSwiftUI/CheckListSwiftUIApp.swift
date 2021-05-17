@@ -9,12 +9,12 @@ import SwiftUI
 
 @main
 struct CheckListSwiftUIApp: App {
-    let persistenceController = PersistenceController.shared
-
+    private let persistenceController = PersistenceController.shared
+    
     var body: some Scene {
         WindowGroup {
             CheckListView()
-                .environmentObject(CheckListViewModel())
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
