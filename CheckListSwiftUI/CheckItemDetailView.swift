@@ -19,7 +19,7 @@ struct CheckItemDetailView: View {
 }
 
 struct AddItemView: View {
-    let checklistModel: CheckListViewModel
+    @EnvironmentObject private var checklistModel: CheckListViewModel
     
     @State private var newItem = CheckItem(name: "")
     @Environment(\.presentationMode) private var presentationMode
@@ -40,7 +40,7 @@ struct AddItemView: View {
 }
 
 struct EditItemView: View {
-    let checklistModel: CheckListViewModel
+    @EnvironmentObject private var checklistModel: CheckListViewModel
     @Environment(\.presentationMode) private var presentationMode
     @State var editItem: CheckItem
     

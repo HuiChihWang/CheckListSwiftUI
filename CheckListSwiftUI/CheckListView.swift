@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CheckListView: View {
-    @ObservedObject private var checklistModel = CheckListViewModel()
+    @EnvironmentObject private var checklistModel: CheckListViewModel
     @State private var isShowAddView = false
     @State private var isShowEditView = false
     
@@ -17,17 +17,11 @@ struct CheckListView: View {
             List {
                 ForEach(checklistModel.items) { item in
                     NavigationLink(
-                        destination: EditItemView(checklistModel: checklistModel, editItem: item),
+                        destination: EditItemView(editItem: item),
                         label: {
-                            CheckItemView(
-                                item: item,
-                                checkAction: {
-                                    checklistModel.checkItem(item: item)
-                                },
-                                action: {
-                                    self.isShowEditView = true
-                                }
-                            )
+                            CheckItemView(item: item) {
+                                self.isShowEditView = true
+                            }
                         }
                     )
                 }
@@ -45,7 +39,7 @@ struct CheckListView: View {
             .sheet(
                 isPresented: $isShowAddView,
                 content: {
-                    AddItemView(checklistModel: checklistModel)
+                    AddItemView()
                         .onAppear {
                             print("NewChecklistItemView has appeared!")
                         }
@@ -70,9 +64,9 @@ struct CheckListView_Previews: PreviewProvider {
 }
 
 struct CheckItemView: View {
+    @EnvironmentObject private var checklistModel: CheckListViewModel
     let item: CheckItem
-    let checkAction: () -> Void
-    let action: () -> Void
+    let tapAction: () -> Void
     
     var body: some View {
         HStack {
@@ -80,13 +74,15 @@ struct CheckItemView: View {
                 Text(item.name)
                 Spacer()
             }
-            .onTapGesture(perform: action)
+            .onTapGesture(perform: tapAction)
             
             Image(systemName: item.isChecked ? "checkmark.circle" : "circle")
                 .foregroundColor(.gray)
                 .font(.system(size: 20))
                 .padding(.trailing, 5)
-                .onTapGesture(perform: checkAction)
+                .onTapGesture {
+                    checklistModel.checkItem(item: item)
+                }
         }
     }
 }

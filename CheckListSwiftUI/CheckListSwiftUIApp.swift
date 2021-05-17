@@ -14,6 +14,7 @@ struct CheckListSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             CheckListView()
+                .environmentObject(CheckListViewModel())
         }
     }
 }
