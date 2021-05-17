@@ -2,7 +2,7 @@
 //  CheckItem+CoreDataProperties.swift
 //  CheckListSwiftUI
 //
-//  Created by Hui Chih Wang on 2021/5/17.
+//  Created by Hui Chih Wang on 2021/5/18.
 //
 //
 
@@ -18,6 +18,9 @@ extension CheckItem {
 
     @NSManaged public var isChecked: Bool
     @NSManaged public var name: String?
+    @NSManaged public var isAlarm: Bool
+    @NSManaged public var dueDate: Date?
+    @NSManaged public var categoryValue: String?
 
 }
 

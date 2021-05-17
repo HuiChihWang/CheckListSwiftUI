@@ -7,14 +7,51 @@
 
 import SwiftUI
 
+enum ItemCategory: String, CaseIterable {
+    case none = "No Choose"
+    case work
+    case holiday
+    case personal
+}
+
+struct EditInformation {
+    var name: String = ""
+    var category = ItemCategory.none
+    var isChecked: Bool = false
+    var isAlarmOpen: Bool = false
+    var dueDate = Date()
+}
+
 struct CheckItemDetailView: View {
-    @Binding var name: String
-    @Binding var isChecked: Bool
+    @Binding var editInfo: EditInformation
     
     var body: some View {
         Form {
-            TextField("Enter Item Name", text: $name)
-            Toggle("Completed", isOn: $isChecked)
+            
+            Section(header: Text("Basic Information")) {
+                TextField("Enter Item Name", text: $editInfo.name)
+                Picker("Category", selection: $editInfo.category) {
+                    ForEach(ItemCategory.allCases, id: \ItemCategory.rawValue) { category in
+                        Text(category.rawValue.capitalized).tag(category)
+                    }
+                }
+                
+                Toggle("Check", isOn: $editInfo.isChecked)
+            }
+            
+            Section(header: Text("Reminder")) {
+                
+                DatePicker("Due Date",
+                           selection: $editInfo.dueDate,
+                           in: Date()...,
+                           displayedComponents: [.date]
+                )
+                .datePickerStyle(CompactDatePickerStyle())
+                
+                Toggle("Alarm", isOn: $editInfo.isAlarmOpen)
+            }
+            
+            
         }
     }
 }
@@ -23,7 +60,7 @@ struct EditItemView: View {
     @Environment(\.managedObjectContext) private var context
     @Environment(\.presentationMode) private var presentationMode
     
-    let editItem: CheckItem?
+    var editItem: CheckItem?
     
     var isEditMode: Bool {
         editItem != nil
@@ -33,32 +70,25 @@ struct EditItemView: View {
         isEditMode ? "Edit Item" : "New Item"
     }
     
+    @State var editInformation: EditInformation
     
-    
-    @State var name: String
-    @State var isChecked: Bool
-
     init(editItem: CheckItem? = nil) {
         self.editItem = editItem
-
-        _name = .init(initialValue: editItem?.name ?? "")
-        _isChecked = .init(initialValue: editItem?.isChecked ?? false)
+        
+        _editInformation = .init(initialValue: self.editItem?.toEditInformation() ?? EditInformation())
     }
     
     var body: some View {
-        CheckItemDetailView(name: $name, isChecked: $isChecked)
-        .navigationBarItems(
-            trailing: Button("Done") {
-                let finishedItem = editItem ?? CheckItem(context: context)
-                
-                finishedItem.name = name
-                finishedItem.isChecked = isChecked
-                
-                self.presentationMode.wrappedValue.dismiss()
-            }
-            .disabled(name.isEmpty)
-        )
-        .navigationBarTitle(navigationTitle, displayMode: .inline)
+        CheckItemDetailView(editInfo: $editInformation)
+            .navigationBarItems(
+                trailing: Button("Done") {
+                    let finishedItem = editItem ?? CheckItem(context: context)
+                    finishedItem.injectEditInfo(with: editInformation)
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+                .disabled(editInformation.name.isEmpty)
+            )
+            .navigationBarTitle(navigationTitle, displayMode: .inline)
     }
 }
 

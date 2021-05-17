@@ -16,7 +16,7 @@
 		0C66C229264D638900CB496A /* CheckListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C66C228264D638900CB496A /* CheckListView.swift */; };
 		0C66C22F264E699600CB496A /* CheckItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C66C22E264E699600CB496A /* CheckItemDetailView.swift */; };
 		0C875DD72652B98B00603102 /* CheckItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C875DD52652B98B00603102 /* CheckItem+CoreDataClass.swift */; };
-		0C875DD82652B98B00603102 /* CheckItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C875DD62652B98B00603102 /* CheckItem+CoreDataProperties.swift */; };
+		0C875DDD2652CE6600603102 /* CheckItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C875DDC2652CE6600603102 /* CheckItem+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +31,7 @@
 		0C66C228264D638900CB496A /* CheckListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListView.swift; sourceTree = "<group>"; };
 		0C66C22E264E699600CB496A /* CheckItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckItemDetailView.swift; sourceTree = "<group>"; };
 		0C875DD52652B98B00603102 /* CheckItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CheckItem+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		0C875DD62652B98B00603102 /* CheckItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CheckItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		0C875DDC2652CE6600603102 /* CheckItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CheckItem+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,8 +87,8 @@
 		0C875DD42652B92400603102 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0C875DDC2652CE6600603102 /* CheckItem+CoreDataProperties.swift */,
 				0C875DD52652B98B00603102 /* CheckItem+CoreDataClass.swift */,
-				0C875DD62652B98B00603102 /* CheckItem+CoreDataProperties.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -173,10 +173,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C66C21E264D622000CB496A /* Persistence.swift in Sources */,
+				0C875DDD2652CE6600603102 /* CheckItem+CoreDataProperties.swift in Sources */,
 				0C66C221264D622000CB496A /* CheckListSwiftUI.xcdatamodeld in Sources */,
 				0C5CE0242651467300D4868B /* CheckItemView.swift in Sources */,
 				0C875DD72652B98B00603102 /* CheckItem+CoreDataClass.swift in Sources */,
-				0C875DD82652B98B00603102 /* CheckItem+CoreDataProperties.swift in Sources */,
 				0C66C215264D621600CB496A /* CheckListSwiftUIApp.swift in Sources */,
 				0C66C22F264E699600CB496A /* CheckItemDetailView.swift in Sources */,
 				0C66C229264D638900CB496A /* CheckListView.swift in Sources */,

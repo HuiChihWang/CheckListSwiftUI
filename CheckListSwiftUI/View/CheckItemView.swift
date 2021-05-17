@@ -11,13 +11,33 @@ struct CheckItemView: View {
     @ObservedObject var item: CheckItem
     var action: () -> Void = {}
     
+    private let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }()
+    
+    
     var body: some View {
         HStack {
             Group {
-                Text(item.name ?? "")
+                
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(item.name ?? "")
+                        .font(.system(size: 22, weight: .medium, design: .default))
+                    Text(dateFormatter.string(from: item.dueDate ?? Date()))
+                        .foregroundColor(.gray)
+                }
                 Spacer()
             }
             .onTapGesture(perform: action)
+            
+            if item.isAlarm {
+                Image(systemName: "alarm")
+                    .foregroundColor(.blue)
+                    .font(.system(size: 20))
+                    .padding(.trailing, 5)
+            }
             
             Image(systemName: item.isChecked ? "checkmark.circle" : "circle")
                 .foregroundColor(.gray)
@@ -27,6 +47,8 @@ struct CheckItemView: View {
                     item.isChecked.toggle()
                     print("toggle item")
                 }
+            
+
         }
     }
 }
