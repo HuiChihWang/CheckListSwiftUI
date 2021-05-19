@@ -9,14 +9,13 @@ import SwiftUI
 
 struct CheckListView: View {
     @Environment(\.managedObjectContext) private var managedContext
+    
     @FetchRequest(
         fetchRequest: CheckItem.requestwithSortingDate()
     ) private var items: FetchedResults<CheckItem>
     
-    
     @State private var isShowAddView = false
     @State private var isShowEditView = false
-    
 
     var body: some View {
         NavigationView {
@@ -49,13 +48,7 @@ struct CheckListView: View {
             )
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            do {
-                try self.managedContext.save()
-                print("save data to core model")
-            }
-            catch {
-                print("Save Error: \(error.localizedDescription)")
-            }
+            PersistenceController.saveToContainer(with: managedContext)
         }
 
     }

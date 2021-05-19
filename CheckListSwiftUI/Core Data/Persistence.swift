@@ -21,6 +21,14 @@ struct PersistenceController {
     }()
     
 
+    static func saveToContainer(with context: NSManagedObjectContext) {
+        do {
+            try context.save()
+        } catch {
+            print("error in saving: \(error.localizedDescription)")
+        }
+    }
+    
     let container: NSPersistentContainer
 
     
