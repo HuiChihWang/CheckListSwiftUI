@@ -47,8 +47,6 @@ struct CheckItemView: View {
                     item.isChecked.toggle()
                     print("toggle item")
                 }
-            
-
         }
     }
 }

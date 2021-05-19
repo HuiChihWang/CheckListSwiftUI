@@ -14,10 +14,10 @@ public class CheckItem: NSManagedObject {
     
     public override func awakeFromInsert() {
         self.name = ""
-        self.categoryValue = ItemCategory.none.rawValue
         self.isAlarm = false
         self.isChecked = false
         self.dueDate = Date()
+        self.category = CategoryList.defaultCategory.name
     }
     
     public class func gemerateRandomItems(contex: NSManagedObjectContext, numberOfItems: Int) {
@@ -50,22 +50,28 @@ public class CheckItem: NSManagedObject {
         return request
     }
     
+    public class func createTestItem(context: NSManagedObjectContext) -> CheckItem {
+        let checkItem = CheckItem(context: context)
+        checkItem.name = "Test"
+        return checkItem
+    }
+    
     
     func toEditInformation() -> EditInformation {
-        EditInformation(
+        return EditInformation(
             name: self.name!,
-            category: ItemCategory(rawValue: self.categoryValue!) ?? .none,
             isChecked: self.isChecked,
             isAlarmOpen: self.isAlarm,
-            dueDate: self.dueDate!
+            dueDate: self.dueDate!,
+            category: ToDoCategory(name: self.category!)
         )
     }
     
     func injectEditInfo(with info: EditInformation) {
         self.name = info.name
-        self.categoryValue = info.category.rawValue
         self.isChecked = info.isChecked
         self.isAlarm = info.isAlarmOpen
         self.dueDate = info.dueDate
+        self.category = info.category.name
     }
 }

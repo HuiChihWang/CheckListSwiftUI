@@ -3,4 +3,70 @@
    uuid = "504B9582-7154-468F-9A4A-9148937B73B2"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BF589FB8-3D09-4EB6-B013-00992A4B7A4C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CategoryList.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "init()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CA32F137-E542-45DA-83BD-976A2C8DA57B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CategoryList.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "loadCategories()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "CA32F137-E542-45DA-83BD-976A2C8DA57B - fe0959eb2fe6a049"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static CheckListSwiftUI.CategoryList.loadCategories() -&gt; Swift.Array&lt;CheckListSwiftUI.ToDoCategory&gt;"
+                  moduleName = "CheckListSwiftUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/huichihwang/Desktop/CheckListSwiftUI/CategoryList.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "273">
+               </Location>
+               <Location
+                  uuid = "CA32F137-E542-45DA-83BD-976A2C8DA57B - 54ae4a1294688543"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static CheckListSwiftUI.CategoryList.__preview__loadCategories() -&gt; Swift.Array&lt;CheckListSwiftUI.ToDoCategory&gt;"
+                  moduleName = "CategoryList.6.preview-thunk.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/huichihwang/Desktop/CheckListSwiftUI/CategoryList.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "122">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

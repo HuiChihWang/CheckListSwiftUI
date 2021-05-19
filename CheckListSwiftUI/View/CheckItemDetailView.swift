@@ -7,19 +7,12 @@
 
 import SwiftUI
 
-enum ItemCategory: String, CaseIterable {
-    case none = "No Choose"
-    case work
-    case holiday
-    case personal
-}
-
 struct EditInformation {
     var name: String = ""
-    var category = ItemCategory.none
     var isChecked: Bool = false
     var isAlarmOpen: Bool = false
     var dueDate = Date()
+    var category = CategoryList.defaultCategory
 }
 
 struct CheckItemDetailView: View {
@@ -27,20 +20,21 @@ struct CheckItemDetailView: View {
     
     var body: some View {
         Form {
-            
             Section(header: Text("Basic Information")) {
                 TextField("Enter Item Name", text: $editInfo.name)
-                Picker("Category", selection: $editInfo.category) {
-                    ForEach(ItemCategory.allCases, id: \ItemCategory.rawValue) { category in
-                        Text(category.rawValue.capitalized).tag(category)
+                
+                NavigationLink(destination: CategoryPickerView(selected: $editInfo.category)) {
+                    HStack {
+                        Text("Category")
+                        Spacer()
+                        Text(editInfo.category.name)
+                            .foregroundColor(.gray)
                     }
                 }
-                
-                Toggle("Check", isOn: $editInfo.isChecked)
             }
             
+
             Section(header: Text("Reminder")) {
-                
                 DatePicker("Due Date",
                            selection: $editInfo.dueDate,
                            in: Date()...,
@@ -50,8 +44,6 @@ struct CheckItemDetailView: View {
                 
                 Toggle("Alarm", isOn: $editInfo.isAlarmOpen)
             }
-            
-            
         }
     }
 }
@@ -60,54 +52,60 @@ struct EditItemView: View {
     @Environment(\.managedObjectContext) private var context
     @Environment(\.presentationMode) private var presentationMode
     
-    var editItem: CheckItem?
-    
-    var isEditMode: Bool {
-        editItem != nil
-    }
-    
-    var navigationTitle: String {
-        isEditMode ? "Edit Item" : "New Item"
-    }
-    
+    let editItem: CheckItem
     @State var editInformation: EditInformation
     
-    init(editItem: CheckItem? = nil) {
+    init(editItem: CheckItem) {
         self.editItem = editItem
-        
-        _editInformation = .init(initialValue: self.editItem?.toEditInformation() ?? EditInformation())
+        _editInformation = .init(initialValue: self.editItem.toEditInformation())
     }
     
     var body: some View {
         CheckItemDetailView(editInfo: $editInformation)
+            .navigationBarTitle("Edit Item", displayMode: .inline)
             .navigationBarItems(
                 trailing: Button("Done") {
-                    let finishedItem = editItem ?? CheckItem(context: context)
-                    finishedItem.injectEditInfo(with: editInformation)
+                    editItem.injectEditInfo(with: editInformation)
                     self.presentationMode.wrappedValue.dismiss()
                 }
                 .disabled(editInformation.name.isEmpty)
             )
-            .navigationBarTitle(navigationTitle, displayMode: .inline)
     }
 }
 
 
+struct AddItemView: View {
+    @Environment(\.managedObjectContext) private var context
+    @Environment(\.presentationMode) private var presentationMode
+    
+    @State private var editInformation = EditInformation()
+
+    
+    var body: some View {
+        CheckItemDetailView(editInfo: $editInformation)
+            .navigationBarTitle("Add Item", displayMode: .inline)
+            .navigationBarItems(
+                trailing: Button("Done") {
+                    let newItem = CheckItem(context: context)
+                    newItem.injectEditInfo(with: editInformation)
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+                .disabled(editInformation.name.isEmpty)
+            )
+    }
+}
+
 struct EditCheckItemView_Previews: PreviewProvider {
     static let container = PersistenceController.previewItems.container
     
-    static let item: CheckItem = {
-        let item = CheckItem(context: container.viewContext)
-        item.name = "Sex"
-        item.isChecked = [true, false].randomElement()!
-        return item
-    }()
-    
     static var previews: some View {
-        NavigationView {
-            EditItemView()
+        CategoryList.isPreviewMode = true
+        
+        return NavigationView {
+            AddItemView()
         }
         .environment(\.managedObjectContext, container.viewContext)
+        .environmentObject(CategoryList())
         
     }
 }

@@ -43,7 +43,7 @@ struct CheckListView: View {
                 isPresented: $isShowAddView,
                 content: {
                     NavigationView {
-                        EditItemView()
+                        AddItemView()
                     }
                 }
             )
@@ -69,8 +69,11 @@ struct CheckListView: View {
 
 struct CheckListView_Previews: PreviewProvider {
     static var previews: some View {
-        CheckListView()
+        CategoryList.isPreviewMode = true
+        
+        return CheckListView()
             .environment(\.managedObjectContext, PersistenceController.previewItems.container.viewContext)
+            .environmentObject(CategoryList())
     }
 }
 

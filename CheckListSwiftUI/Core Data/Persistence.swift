@@ -8,7 +8,10 @@
 import CoreData
 
 struct PersistenceController {
-    static let shared = PersistenceController(inMemory: false)
+    static var shared: PersistenceController {
+        let controller = PersistenceController(inMemory: false)
+        return controller
+    }
 
     static var previewItems: PersistenceController = {
         let result = PersistenceController(inMemory: true)
